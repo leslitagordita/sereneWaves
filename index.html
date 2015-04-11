@@ -1,0 +1,190 @@
+<!--                                                                                                                       
+     #####    ##         ###   ###                       ##### ##                                          ##     ###    
+  ######  /  #### /       ###   ###                   ######  /### /         #                              ##     ###   
+ /#   /  /   ####/         ##    ##                  /#   /  /  ##/         ###                             ##      ##   
+/    /  /    # #           ##    ##                 /    /  /    #           #                              ##      ##   
+    /  /     #             ##    ##                     /  /                                                ##      ##   
+   ## ##     #      /##    ##    ##      /###          ## ##   ###  /###   ###       /##  ###  /###     ### ##      ##   
+   ## ##     #     / ###   ##    ##     / ###  /       ## ##    ###/ #### / ###     / ###  ###/ #### / #########    ##   
+   ## ########    /   ###  ##    ##    /   ###/        ## ###### ##   ###/   ##    /   ###  ##   ###/ ##   ####     ##   
+   ## ##     #   ##    ### ##    ##   ##    ##         ## #####  ##          ##   ##    ### ##    ##  ##    ##      ##   
+   ## ##     ##  ########  ##    ##   ##    ##         ## ##     ##          ##   ########  ##    ##  ##    ##      ### /
+   #  ##     ##  #######   ##    ##   ##    ##         #  ##     ##          ##   #######   ##    ##  ##    ##       ##/ 
+      /       ## ##        ##    ##   ##    ##            #      ##          ##   ##        ##    ##  ##    ##           
+  /##/        ## ####    / ##    ##   ##    ##        /####      ##          ##   ####    / ##    ##  ##    /#       #   
+ /  #####      ## ######/  ### / ### / ######        /  #####    ###         ### / ######/  ###   ###  ####/        ###  
+/     ##           #####    ##/   ##/   ####        /    ###      ###         ##/   #####    ###   ###  ###          #   
+#                                                   #                                                                    
+ ##                                                  ##                                                                  
+ --> 
+
+<!DOCTYPE html>                                                                                                                       
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <script src="js/jquery-1.11.1.js"></script>
+    <script src="js/fabric.js-1.4.12/dist/fabric.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/main.css"/>
+  </head>
+
+  <body>
+    <div id = "container">
+        <canvas id="canvas" width="" height="" style="border:1px solid #ccc"></canvas>
+    </div>
+ 
+  </body>
+
+    <script>
+    $(function () {
+        //window Height and Width
+        var windowHeight = window.innerHeight;    
+        var windowWidth = window.innerWidth;
+
+        var canvas = new fabric.Canvas('canvas',
+            {
+                backgroundColor: 'rgb(200, 247, 250)'
+            });
+
+        //set canvas dimensions based on window dimensions
+        canvas.setHeight(windowHeight);
+        canvas.setWidth(windowWidth);
+
+        //canvas dimensions
+        var canHeight = canvas.getHeight();
+        var canWidth = canvas.getWidth();
+      
+        //calculates circle's diameter
+        var calcCircDiameter = canHeight * (4/5);
+        var calcCircRadius = calcCircDiameter / 2;
+
+        //calculates top and left placement for circle based on its diameter centering circle based on screen width and height
+        var calcTop = (canHeight - calcCircDiameter) / 2;
+        var calcLeft = (canWidth - calcCircDiameter) / 2;
+
+        var rectBackground = new fabric.Rect({
+            top : 0,
+            left : 0,
+            width : canWidth,
+            height : canHeight,
+            fill : 'rgb(200, 247, 250)',
+            hasControls: false,
+            hasBorders: false,
+            selectable: false,
+        })
+
+           //black background
+           var rectBackgroundTwo = new fabric.Rect({
+            top : 0,
+            left : 0,
+            width : canWidth,
+            height : canHeight,
+            fill : 'rgb(0,0,0)',
+            hasControls: false,
+            hasBorders: false,
+            selectable: false,
+        })
+
+           //sunset colors background
+            var rectBackgroundThree = new fabric.Rect({
+            top : 0,
+            left : 0,
+            width : canWidth,
+            height : canHeight,
+            fill : 'rgb(0,0,0)',
+            hasControls: false,
+            hasBorders: false,
+            selectable: false,
+        })
+
+
+
+        var circle = new fabric.Circle({
+            radius: calcCircRadius, 
+            fill: 'rgb(217,219,219)', 
+            left: calcLeft, 
+            top: calcTop,
+            hasControls: false,
+            hasBorders: false,
+            selectable: false,
+            
+        });
+
+           var circleTwo = new fabric.Circle({
+            radius: calcCircRadius, 
+            fill: 'rgb(252,215,230)', 
+            left: calcLeft, 
+            top: calcTop,
+            hasControls: false,
+            hasBorders: false,
+            selectable: false,
+            
+        });
+
+        //grey gradient
+        circle.setGradient('fill', {
+            x1: 0,
+            y1: circle.height / 2,
+            x2: circle.width,
+            y2: circle.height / 2,
+            colorStops: {
+                0: 'rgb(217,219,219)',
+                1: 'rgb(58,59,54)'
+            }
+        });
+
+        //yellow gradient
+          circleTwo.setGradient('fill', {
+            x1: circle.width,
+            y1: circle.height / 2,
+            x2: 0,
+            y2: circle.height / 2,
+            colorStops: {
+                0: 'rgb(252,255,227)',
+                1: 'rgb(252,210,131)'
+            }
+        });
+
+        //orange purp gradient
+        rectBackgroundThree.setGradient('fill', {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: circle.height / 2,
+            colorStops: {
+                0: 'rgb(197, 109, 227)',
+                1: 'rgb(250, 138, 82)'
+            }
+        });
+
+    
+        //add all objects to canvas
+        canvas.add(rectBackgroundTwo, rectBackgroundThree, circle, rectBackground, circleTwo);
+
+        //circleTwo animate to transparent
+        circleTwo.animate('opacity', 0, {
+            duration:20000,
+            onChange: canvas.renderAll.bind(canvas),
+        });
+
+        //rectBackground, first background, animate to tranparent
+        rectBackground.animate('opacity', 0, {
+            duration:10000,
+            onChange: canvas.renderAll.bind(canvas),
+            easing: fabric.util.ease.easeInQuad,
+            //second background animate to transparent
+            onComplete: rectBackgroundThree.animate('opacity', 0,{ 
+                duration:20000,
+                onChange: canvas.renderAll.bind(canvas),
+                easing: fabric.util.ease.easeInQuad,
+            })//end of rectBackgroundThree animate
+        });//end of rectBackground animate
+
+
+
+    });
+
+    </script>
+  
+
+</html>
