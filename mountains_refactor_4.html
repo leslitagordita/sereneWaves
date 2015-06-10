@@ -70,7 +70,7 @@
         var wavesHeight = bottomTwoThirds / 3;
 
         //calculate when 2nd wave appears
-        var rectOceanTenths = bottomTwoThirds / 10;
+        var rectOceanTenths = bottomTwoThirds / 5;
         var rectOceanNineTenths = rectOceanTenths * 9;
         var secondWaveTrigger = sandTop - rectOceanTenths;
 
@@ -284,27 +284,35 @@
           //alert("if 1 is initiated");
           console.log(rectWaves.getTop());
           rectWaves.setTop(activeWavesTop + .5);
-
+          }
           if(rectWaves.getTop() > secondWaveTrigger){
             rectInvisWaves.animate('opacity', 1);    
             console.log("2nd if");
+          }
 
             if(rectInvisWaves.getOpacity() >= 0.5){
               console.log("third if");
               rectInvisWaves.setTop(rectInvisWaves.getTop() + .5);
             }
+            //if(rectWaves.getTop() >= activeSandTop)
             if(rectWaves.getTop() >= activeSandTop){
-              rectWaves.animate('opacity', 0);
-              rectWaves.setTop(wavesTop);
+              rectWaves.animate('opacity', 0,{
+                onComplete:rectWaves.setTop(wavesTop),
+              });
               rectWaves.animate('opacity', 1);
             }
-          }
+            //if(rectInvisWaves.getTop() >= activeSandTop)
+            if(rectInvisWaves.getTop() >= activeSandTop){
+              rectInvisWaves.animate('opacity', 0);
+              rectInvisWaves.setTop(wavesTop);
+              rectInvisWaves.animate('opacity', 1);
+            }
           canvas.renderAll();
           console.log("waves" + rectWaves.getTop());
           console.log("sand" + rectSand.getTop());
           console.log("second wave" + secondWaveTrigger); 
           console.log(rectInvisWaves.getOpacity()); 
-        }
+        
        
       }//end animateWaves
 

@@ -70,7 +70,7 @@
         var wavesHeight = bottomTwoThirds / 3;
 
         //calculate when 2nd wave appears
-        var rectOceanTenths = bottomTwoThirds / 10;
+        var rectOceanTenths = bottomTwoThirds / 5;
         var rectOceanNineTenths = rectOceanTenths * 9;
         var secondWaveTrigger = sandTop - rectOceanTenths;
 
@@ -119,6 +119,9 @@
 
         var rectInvisWaves = new customRect(wavesTop, wavesHeight, 'rgb(50, 217, 178)');
         rectInvisWaves.setOpacity(0);
+
+        var rectInvisWavesTwo = new customRect(wavesTop, wavesHeight, 'rgb(50, 217, 178)');
+        rectInvisWavesTwo.setOpacity(0);
 
         rectOcean.setGradient('fill', {
             x1: 0,
@@ -173,102 +176,24 @@
             x2: 0,
             y2: rectWaves.height / 2,
             colorStops: {
-                0: 'rgb(255, 255, 255)',
+                0: 'rgb(0, 255, 255)',
+                0.3: 'rgba(255, 255, 255, 0.5)',
+                1: 'rgba(160, 235, 203, 0)'
+            }
+        });
+            rectInvisWavesTwo.setGradient('fill', {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: rectWaves.height / 2,
+            colorStops: {
+                0: 'rgb(255, 0, 255)',
                 0.3: 'rgba(255, 255, 255, 0.5)',
                 1: 'rgba(160, 235, 203, 0)'
             }
         });
 
-      /*function opaqueFinal(){
-        rectInvisWaves.animate('opacity', 0,{ 
-                duration:1000000,
-                onChange: canvas.renderAll.bind(canvas),
-                easing: fabric.util.ease.easeOutSine,
-                //onComplete: animateRect2(),
-            });
-
-      }//end function opaqueFinal
-
-      function opaque2(){
-        rectInvisWaves.animate('top', sandTop ,{ 
-                duration:12000,
-                onChange: canvas.renderAll.bind(canvas),
-                easing: fabric.util.ease.easeInSine,
-                //onComplete: opaqueFinal(),
-            })
-        console.log("opaque2");
-      }//end function opaque
-
-    function animateRect2(){
-        rectInvisWaves.animate('opacity', 1, {
-          duration:4000,
-          onChange: canvas.renderAll.bind(canvas),
-          easing: fabric.util.ease.easeInSine,
-          onComplete: opaque2(),
-        });
-        console.log("animateRect2");
-      }//end function animateRect()
-
-      function opaque(){
-        rectWaves.animate('opacity', 0,{ 
-                duration:17000,
-                onChange: canvas.renderAll.bind(canvas),
-                easing: fabric.util.ease.easeOutSine,
-                onComplete: animateRect2(),
-            });
-        console.log("opaque" + rectWaves.top);
-        //rectInvisWaves.setVisible(true);
-      }//end function opaque
-
-      function animateRect(){
-        rectWaves.animate('top', sandTop, {
-          duration:6000,
-          onChange: canvas.renderAll.bind(canvas),
-          onComplete: opaque(),
-        });
-        
-        
-        //setTimeout(animateRect(), 100000);
-        console.log("animateRect");
-      }//end function animateRect()
-
-      
-
-      function resetRect(){
-        console.log("hi");
-        canvas.renderAll.bind(canvas);
-      }//end function resetRect()
-   
-
-        canvas.add(rectBackground, rectOcean, rectSand, rectWaves, rectInvisWaves);
-
-        //setInterval(rectWaves.animateRect(), 100);
-        setTimeout(function animate() {
-            for (i = 0; i < 5; i++){
-            //rectWaves.animateRect();
-            animateRect();
-            
-            //opaque2();
-            //canvas.renderAll();
-            //resetRect();
-          }
-          //setTimeout(animate, 500);
-       }, 100);*/
-      
-
-      //if rectwaves < sandtop
-      //   increment rectwaves by 2
-      // if rectwaves === seconeWavesOceanTrigger
-      //    reveal 2nd set of waves
-      //    start their increment
-      //  if rectWaves === sandTop
-      //    disappear 
-      //    rectWaves == rectWaves
-      //   if 2ndWaves == sandTop
-      //      remove
-      //      2ndWaves == rectWaves
-      //   
-
+     
       function changeOpacity(){
         rectInvisWaves.setOpacity(1);
         canvas.renderAll();
@@ -280,35 +205,72 @@
         var activeWavesTop = rectWaves.getTop();
         var activeSandTop = rectSand.getTop();
         //alert(activeWavesTop);
+
+        //begins movement for first wave
+        //if(rectWaves.getTop() < activeSandTop)
+        //if(activeWavesTop < activeSandTop)
         if(activeWavesTop < activeSandTop){
           //alert("if 1 is initiated");
           console.log(rectWaves.getTop());
           rectWaves.setTop(activeWavesTop + .5);
+         
+          }
 
+          //2nd wave is triggered to appear
           if(rectWaves.getTop() > secondWaveTrigger){
             rectInvisWaves.animate('opacity', 1);    
             console.log("2nd if");
+          }
 
+            //begins movement for 2nd wave
             if(rectInvisWaves.getOpacity() >= 0.5){
               console.log("third if");
               rectInvisWaves.setTop(rectInvisWaves.getTop() + .5);
             }
+            //if(rectWaves.getTop() >= activeSandTop)
+
+            //makes first wave disapper and makes third wave appear
             if(rectWaves.getTop() >= activeSandTop){
               rectWaves.animate('opacity', 0);
-              rectWaves.setTop(wavesTop);
-              rectWaves.animate('opacity', 1);
+              rectInvisWavesTwo.animate('opacity',1);
+              //rectWaves.animate('opacity', 1);
+              //rectWaves.setTop(wavesTop)
             }
-          }
+
+            //triggers third wave to move
+            if(rectInvisWavesTwo.getOpacity() >= 0.1){
+              console.log("third if");
+              rectInvisWavesTwo.setTop(rectInvisWavesTwo.getTop() + .5);
+              //rectWaves.setTop(wavesTop);
+            }
+
+            //fade third wave, reappear first wave
+            if(rectInvisWavesTwo.getTop() >= activeSandTop){
+                //rectWaves.setTop(rectwave);
+                rectInvisWavesTwo.animate('opacity', 0);
+                rectWaves.setTop(wavesTop);
+                rectWaves.animate('opacity', 1);
+                console.log("rectWaves is here" + rectWaves.getTop() + " and activeWavesTop" + activeWavesTop);
+              }
+
+
+            
+            //if(rectInvisWaves.getTop() >= activeSandTop)
+            if(rectInvisWaves.getTop() >= activeSandTop){
+              rectInvisWaves.animate('opacity', 0);
+              rectInvisWaves.setTop(wavesTop);
+              rectInvisWaves.animate('opacity', 1);
+            }
           canvas.renderAll();
           console.log("waves" + rectWaves.getTop());
           console.log("sand" + rectSand.getTop());
           console.log("second wave" + secondWaveTrigger); 
           console.log(rectInvisWaves.getOpacity()); 
-        }
+        
        
       }//end animateWaves
 
-      canvas.add(rectBackground, rectOcean, rectSand, rectWaves, rectInvisWaves);
+      canvas.add(rectBackground, rectOcean, rectSand, rectWaves, rectInvisWaves, rectInvisWavesTwo);
 
       var startAnim = setInterval(animateWaves, 100);
 
